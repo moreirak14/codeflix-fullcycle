@@ -1,4 +1,4 @@
-from dataclasses import is_dataclass
+from dataclasses import FrozenInstanceError, is_dataclass
 import unittest
 import uuid
 from __seedwork.domain.exceptions import InvalidUuidException
@@ -52,3 +52,8 @@ class TestUniqueEntityIdUnit(unittest.TestCase):
             value_object = UniqueEntityId()
             uuid.UUID(value_object.id)
             mock_validate.assert_called_once()
+
+    def test_is_immutable(self):
+        with self.assertRaises(FrozenInstanceError):
+            value_object = UniqueEntityId()
+            value_object.id = "Fake ID"
