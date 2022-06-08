@@ -1,3 +1,4 @@
+# pylint: disable=unexpected-keyword-arg
 from abc import ABC
 from dataclasses import dataclass, is_dataclass
 import unittest

@@ -2,9 +2,9 @@ from abc import ABC
 from dataclasses import FrozenInstanceError, dataclass, is_dataclass
 import unittest
 import uuid
+from unittest.mock import patch
 from __seedwork.domain.exceptions import InvalidUuidException
 from __seedwork.domain.value_objects import UniqueEntityId, ValueObject
-from unittest.mock import patch
 
 
 @dataclass(frozen=True)
