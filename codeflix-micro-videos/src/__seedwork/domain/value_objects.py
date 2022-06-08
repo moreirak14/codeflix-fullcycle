@@ -5,7 +5,7 @@ from __seedwork.domain.exceptions import InvalidUuidException
 from abc import ABC
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class ValueObject(ABC):
     def __str__(self) -> str:
         fields_name = [field.name for field in fields(self)]
@@ -16,7 +16,7 @@ class ValueObject(ABC):
             })
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class UniqueEntityId(ValueObject):
 
     id: str = field(default_factory=lambda: str(uuid.uuid4()))
