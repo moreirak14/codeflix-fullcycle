@@ -5,7 +5,7 @@ from dataclasses import FrozenInstanceError, is_dataclass
 
 
 class TestCategoryUnit(unittest.TestCase):
-    
+
     def test_if_is_a_dataclass(self):
         self.assertTrue(is_dataclass(Category))
 
@@ -18,8 +18,8 @@ class TestCategoryUnit(unittest.TestCase):
 
         created_at = datetime.now()
         category = Category(
-            name="Movie", 
-            description="some description", 
+            name="Movie",
+            description="some description",
             is_active=False,
             created_at=created_at
         )
@@ -36,7 +36,7 @@ class TestCategoryUnit(unittest.TestCase):
             category1.created_at.timestamp(),
             category2.created_at.timestamp()
         )
-    
+
     def test_is_immutable(self):
         with self.assertRaises(FrozenInstanceError):
             value_object = Category(name="test")

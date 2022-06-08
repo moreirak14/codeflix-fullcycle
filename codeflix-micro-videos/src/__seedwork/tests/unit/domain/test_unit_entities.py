@@ -25,18 +25,20 @@ class TestEntityUnit(unittest.TestCase):
         self.assertEqual(entity.prop2, "value2")
         self.assertIsInstance(entity.unique_entity_id, UniqueEntityId)
         self.assertEqual(entity.unique_entity_id.id, entity.id)
-    
+
     def test_accept_a_valid_uuid(self):
         entity = StubEntity(
-            unique_entity_id=UniqueEntityId("6eac08e5-5a54-4d2b-afeb-16253d0e75fb"),
+            unique_entity_id=UniqueEntityId(
+                "6eac08e5-5a54-4d2b-afeb-16253d0e75fb"),
             prop1="value1",
             prop2="value2",
         )
         self.assertEqual(entity.id, "6eac08e5-5a54-4d2b-afeb-16253d0e75fb")
-    
+
     def test_to_dict_method(self):
         entity = StubEntity(
-            unique_entity_id=UniqueEntityId("6eac08e5-5a54-4d2b-afeb-16253d0e75fb"),
+            unique_entity_id=UniqueEntityId(
+                "6eac08e5-5a54-4d2b-afeb-16253d0e75fb"),
             prop1="value1",
             prop2="value2",
         )
