@@ -1,3 +1,4 @@
+from unicodedata import category
 import unittest
 from datetime import datetime
 from category.domain.entities import Category
@@ -41,3 +42,19 @@ class TestCategoryUnit(unittest.TestCase):
         with self.assertRaises(FrozenInstanceError):
             value_object = Category(name="test")
             value_object.name = "Name test"
+
+    def test_update(self):
+        category = Category(name="Movie")
+        category.update("Real Facts", "Some description")
+        self.assertEqual(category.name, "Real Facts")
+        self.assertEqual(category.description, "Some description")
+
+    def test_activate(self):
+        category = Category(name="Movie,", is_active=False)
+        category.activate()
+        self.assertTrue(category.is_active)
+
+    def test_deactivate(self):
+        category = Category(name="Movie,")
+        category.deactivate()
+        self.assertFalse(category.is_active)
