@@ -3,6 +3,7 @@ import abc
 from dataclasses import dataclass
 from typing import Any, Dict, Generic, List, TypeVar
 from __seedwork.domain.exceptions import ValidationException
+from rest_framework.serializers import Serializer
 
 
 @dataclass(frozen=True, slots=True)
@@ -49,3 +50,16 @@ class ValidatorFieldsInterface(ABC, Generic[PropsValidated]):
     @abc.abstractmethod
     def validate(self, data: Any) -> bool:
         raise NotImplementedError()
+
+
+class DRFValidator(ValidatorFieldsInterface[PropsValidated], ABC):
+
+    def validate(self, data: Serializer) -> bool:
+        if data.is_valid():
+            self.validated_data = data.validated_data
+            return True
+        else:
+            self.errors = {
+                field: [str(_error) for _error in _errors] for field, _errors in data.errors.items()
+            }
+            return False
