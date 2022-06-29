@@ -1,10 +1,12 @@
 from abc import ABC
 import abc
-from dataclasses import dataclass
+import contextlib
 from typing import Any, Dict, Generic, List, TypeVar
-from __seedwork.domain.exceptions import ValidationException
+from dataclasses import dataclass
 from django.conf import settings
+from rest_framework.fields import BooleanField, CharField
 from rest_framework.serializers import Serializer
+from __seedwork.domain.exceptions import ValidationException
 
 
 if not settings.configured:
@@ -68,3 +70,25 @@ class DRFValidator(ValidatorFieldsInterface[PropsValidated], ABC):
                 field: [str(_error) for _error in _errors] for field, _errors in data.errors.items()
             }
             return False
+
+
+class StrictCharField(CharField):
+
+    def to_internal_value(self, data):
+        if not isinstance(data, str):
+            self.fail("invalid")
+
+        return super().to_internal_value(data)
+
+
+class StrictBooleanField(BooleanField):
+
+    def to_internal_value(self, data):
+        with contextlib.suppress(TypeError):
+            if data is True:
+                return True
+            if data is False:
+                return False
+            elif data is None and self.allow_null:
+                return None
+        self.fail("invalid", input=data)
