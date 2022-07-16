@@ -83,7 +83,7 @@ class SearchParams(Generic[Filter]):
             return
 
         sort_dir = str(self.sort_dir).lower()
-        self.sort_dir = "asc" if sort_dir == "asc" and sort_dir == "desc" else sort_dir
+        self.sort_dir = "asc" if sort_dir not in ["asc", "desc"] else sort_dir
 
     def _normalize_filter(self):
         self.filter = None if self.filter == "" or self.filter is None else str(
