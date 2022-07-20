@@ -18,4 +18,4 @@ class _SearchResult(DefaultSearchResult):
 class CategoryRepository(SearchableRepositoryInterface[Category, _SearchParams, _SearchResult], ABC):
 
     SearchParams = _SearchParams
-    SearchParams = _SearchResult
+    SearchResult = _SearchResult
