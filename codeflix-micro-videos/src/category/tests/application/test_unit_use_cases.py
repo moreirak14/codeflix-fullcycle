@@ -1,6 +1,7 @@
 from typing import Optional
 import unittest
 from unittest.mock import patch
+from category.application.dto import CategoryOutput
 from category.application.use_cases import CreateCategoryUseCase, GetCategoryUseCase
 from category.domain.entities import Category
 from category.infra.repositories import CategoryInMemoryRepository
@@ -32,6 +33,9 @@ class TestCreateCategoryUseCaseUnit(unittest.TestCase):
             "is_active"].default
         self.assertEqual(is_active_default,
                          Category.get_field("is_active").default)
+
+    def test_output(self):
+        self.assertTrue(issubclass(self.use_case.Output, CategoryOutput))
 
     def test_execute(self):
         with patch.object(self.category_repo, "insert", wraps=self.category_repo.insert) as spy_insert:
@@ -85,6 +89,9 @@ class TestGetCategoryUseCaseUnit(unittest.TestCase):
         self.assertEqual(self.use_case.Input.__annotations__, {
             "id": str,
         })
+
+    def test_output(self):
+        self.assertTrue(issubclass(self.use_case.Output, CategoryOutput))
 
     def test_throws_exception_when_category_not_found(self):
         input_param = self.use_case.Input("fake id")
