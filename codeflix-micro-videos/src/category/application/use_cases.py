@@ -1,6 +1,6 @@
 from dataclasses import asdict, dataclass
-from datetime import datetime
 from typing import Optional
+from category.application.dto import CategoryOutput
 from category.domain.entities import Category
 from category.domain.repositories import CategoryRepository
 
@@ -29,12 +29,8 @@ class CreateCategoryUseCase:
         is_active: Optional[bool] = Category.get_field("is_active").default
 
     @dataclass(slots=True, frozen=True)
-    class Output:
-        id: str
-        name: str
-        description: Optional[str]
-        is_active: bool
-        created_at: datetime
+    class Output(CategoryOutput):
+        pass
 
 
 @dataclass(slots=True, frozen=True)
@@ -59,9 +55,5 @@ class GetCategoryUseCase:
         id: str
 
     @dataclass(slots=True, frozen=True)
-    class Output:
-        id: str
-        name: str
-        description: Optional[str]
-        is_active: bool
-        created_at: datetime
+    class Output(CategoryOutput):
+        pass
