@@ -1,9 +1,10 @@
 from typing import Optional
 import unittest
 from unittest.mock import patch
-from category.application.use_cases import CreateCategoryUseCase
+from category.application.use_cases import CreateCategoryUseCase, GetCategoryUseCase
 from category.domain.entities import Category
 from category.infra.repositories import CategoryInMemoryRepository
+from __seedwork.domain.exceptions import NotFoundException
 
 
 class TestCreateCategoryUseCaseUnit(unittest.TestCase):
@@ -68,4 +69,43 @@ class TestCreateCategoryUseCaseUnit(unittest.TestCase):
                 description="some description",
                 is_active=False,
                 created_at=self.category_repo.items[2].created_at,
+            ))
+
+
+class TestGetCategoryUseCaseUnit(unittest.TestCase):
+
+    use_case: GetCategoryUseCase
+    category_repo: CategoryInMemoryRepository
+
+    def setUp(self) -> None:
+        self.category_repo = CategoryInMemoryRepository()
+        self.use_case = GetCategoryUseCase(self.category_repo)
+
+    def test_input(self):
+        self.assertEqual(self.use_case.Input.__annotations__, {
+            "id": str,
+        })
+
+    def test_throws_exception_when_category_not_found(self):
+        input_param = self.use_case.Input("fake id")
+        with self.assertRaises(NotFoundException) as assert_error:
+            self.use_case.execute(input_param=input_param)
+        self.assertEqual(
+            assert_error.exception.args[0], "Entity not found using ID: fake id")
+
+    def test_execute(self):
+        category = Category(name="Movie")
+        self.category_repo.items = [category]
+
+        with patch.object(self.category_repo, "find_by_id", wraps=self.category_repo.find_by_id) as spy_find_by_id:
+            input_param = self.use_case.Input(category.id)
+            output = self.use_case.execute(input_param=input_param)
+            spy_find_by_id.assert_called_once()
+
+            self.assertEqual(output, self.use_case.Output(
+                id=self.category_repo.items[0].id,
+                name="Movie",
+                description=None,
+                is_active=True,
+                created_at=self.category_repo.items[0].created_at,
             ))
