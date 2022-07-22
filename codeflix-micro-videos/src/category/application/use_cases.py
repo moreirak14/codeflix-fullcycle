@@ -1,6 +1,6 @@
 from dataclasses import asdict, dataclass
 from typing import Optional
-from category.application.dto import CategoryOutput
+from category.application.dto import CategoryOutput, CategoryOutputMapper
 from category.domain.entities import Category
 from category.domain.repositories import CategoryRepository
 
@@ -14,13 +14,10 @@ class CreateCategoryUseCase:
         category = Category(**asdict(input_param))
 
         self.category_repo.insert(category)
-        return self.Output(
-            id=category.id,
-            name=category.name,
-            description=category.description,
-            is_active=category.is_active,
-            created_at=category.created_at,
-        )
+        return self.__to_output(category=category)
+
+    def __to_output(self, category: Category):
+        return CategoryOutputMapper.to_output(category=category)
 
     @dataclass(slots=True, frozen=True)
     class Input:
@@ -42,13 +39,10 @@ class GetCategoryUseCase:
         category = self.category_repo.find_by_id(input_param.id)
 
         self.category_repo.insert(category)
-        return self.Output(
-            id=category.id,
-            name=category.name,
-            description=category.description,
-            is_active=category.is_active,
-            created_at=category.created_at,
-        )
+        return self.__to_output(category=category)
+
+    def __to_output(self, category: Category):
+        return CategoryOutputMapper.to_output(category=category)
 
     @dataclass(slots=True, frozen=True)
     class Input:
