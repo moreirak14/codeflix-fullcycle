@@ -1,6 +1,7 @@
 from typing import Optional
 import unittest
 from unittest.mock import patch
+from __seedwork.application.use_cases import UseCase
 from category.application.dto import CategoryOutput
 from category.application.use_cases import CreateCategoryUseCase, GetCategoryUseCase
 from category.domain.entities import Category
@@ -16,6 +17,9 @@ class TestCreateCategoryUseCaseUnit(unittest.TestCase):
     def setUp(self) -> None:
         self.category_repo = CategoryInMemoryRepository()
         self.use_case = CreateCategoryUseCase(self.category_repo)
+
+    def test_if_instance_an_use_case(self):
+        self.assertIsInstance(self.use_case, UseCase)
 
     def test_input(self):
         self.assertEqual(self.use_case.Input.__annotations__, {
@@ -84,6 +88,9 @@ class TestGetCategoryUseCaseUnit(unittest.TestCase):
     def setUp(self) -> None:
         self.category_repo = CategoryInMemoryRepository()
         self.use_case = GetCategoryUseCase(self.category_repo)
+
+    def test_if_instance_an_use_case(self):
+        self.assertIsInstance(self.use_case, UseCase)
 
     def test_input(self):
         self.assertEqual(self.use_case.Input.__annotations__, {
