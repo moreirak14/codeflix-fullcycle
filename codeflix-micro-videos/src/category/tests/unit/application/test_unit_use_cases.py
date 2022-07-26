@@ -1,12 +1,13 @@
+from datetime import datetime, timedelta
 from typing import Optional
 import unittest
 from unittest.mock import patch
-from __seedwork.application.use_cases import UseCase
-from category.application.dto import CategoryOutput
-from category.application.use_cases import CreateCategoryUseCase, GetCategoryUseCase
+from __seedwork.domain.exceptions import NotFoundException
+from __seedwork.application.use_cases import Output, UseCase
+from category.application.dto import CategoryOutput, CategoryOutputMapper
+from category.application.use_cases import CreateCategoryUseCase, GetCategoryUseCase, ListCategoryUseCase
 from category.domain.entities import Category
 from category.infra.repositories import CategoryInMemoryRepository
-from __seedwork.domain.exceptions import NotFoundException
 
 
 class TestCreateCategoryUseCaseUnit(unittest.TestCase):
@@ -123,3 +124,97 @@ class TestGetCategoryUseCaseUnit(unittest.TestCase):
                 is_active=True,
                 created_at=self.category_repo.items[0].created_at,
             ))
+
+
+class TestListCategoryUseCaseUnit(unittest.TestCase):
+
+    use_case: ListCategoryUseCase
+    category_repo: CategoryInMemoryRepository
+
+    def setUp(self) -> None:
+        self.category_repo = CategoryInMemoryRepository()
+        self.use_case = ListCategoryUseCase(self.category_repo)
+
+    def test_if_instance_an_use_case(self):
+        self.assertIsInstance(self.use_case, UseCase)
+
+    def test_execute_using_empty_search_params(self):
+        self.category_repo.items = [
+            Category(name="teste 1"),
+            Category(name="teste 2", created_at=datetime.now() +
+                     timedelta(seconds=200)),
+        ]
+        with patch.object(self.category_repo, "search", wraps=self.category_repo.search) as spy_search:
+            input_param = self.use_case.Input()
+            output = self.use_case.execute(input_param=input_param)
+            spy_search.assert_called_once()
+
+            self.assertEqual(output, self.use_case.Output(
+                items=list(map(CategoryOutputMapper.to_output,
+                           self.category_repo.items[::-1])),
+                total=2,
+                current_page=1,
+                per_page=15,
+                last_page=1,
+            ))
+
+    def test_execute_using_pagination_and_sort_and_filter(self):
+        items = [
+            Category(name="a"),
+            Category(name="AAA"),
+            Category(name="AaA"),
+            Category(name="b"),
+            Category(name="c"),
+        ]
+        self.category_repo.items = items
+
+        input_param = self.use_case.Input(
+            page=1,
+            per_page=2,
+            sort="name",
+            sort_dir="asc",
+            filter="a"
+        )
+        output = self.use_case.execute(input_param=input_param)
+        self.assertEqual(output, self.use_case.Output(
+            items=list(map(CategoryOutputMapper.to_output,
+                           [items[1], items[2]])),
+            total=3,
+            current_page=1,
+            per_page=2,
+            last_page=2,
+        ))
+
+        input_param = self.use_case.Input(
+            page=2,
+            per_page=2,
+            sort="name",
+            sort_dir="asc",
+            filter="a"
+        )
+        output = self.use_case.execute(input_param=input_param)
+        self.assertEqual(output, self.use_case.Output(
+            items=list(map(CategoryOutputMapper.to_output,
+                           [items[0]])),
+            total=3,
+            current_page=2,
+            per_page=2,
+            last_page=2,
+        ))
+
+        input_param = self.use_case.Input(
+            page=1,
+            per_page=2,
+            sort="name",
+            sort_dir="desc",
+            filter="a"
+        )
+        output = self.use_case.execute(input_param=input_param)
+        self.assertEqual(output, self.use_case.Output(
+            items=list(map(CategoryOutputMapper.to_output,
+                           [items[0], items[2]])),
+            total=3,
+            current_page=1,
+            per_page=2,
+            last_page=2,
+        ))
