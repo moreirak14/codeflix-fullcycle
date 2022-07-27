@@ -1,3 +1,4 @@
+# pylint: disable=unexpected-keyword-arg
 from datetime import datetime
 from typing import Optional
 import unittest
@@ -6,23 +7,24 @@ from category.domain.entities import Category
 
 
 class TestCategoryOutputUnit(unittest.TestCase):
-
     def test_fields(self):
-        self.assertEqual(CategoryOutput.__annotations__, {
-            'id': str,
-            'name': str,
-            'description': Optional[str],
-            'is_active': bool,
-            'created_at': datetime,
-        })
+        self.assertEqual(
+            CategoryOutput.__annotations__,
+            {
+                "id": str,
+                "name": str,
+                "description": Optional[str],
+                "is_active": bool,
+                "created_at": datetime,
+            },
+        )
 
 
-class CategoryOutputChild(CategoryOutput):
+class CategoryOutputChild(CategoryOutput):  # pylint: disable=too-few-public-methods
     pass
 
 
 class TestCategoryOutputMapperUnit(unittest.TestCase):
-
     def test_to_output_from_child(self):
         mapper = CategoryOutputMapper.from_child(CategoryOutputChild)
         self.assertIsInstance(mapper, CategoryOutputMapper)
@@ -42,21 +44,28 @@ class TestCategoryOutputMapperUnit(unittest.TestCase):
             created_at=created_at,
         )
 
-        output = CategoryOutputMapper.from_child(
-            CategoryOutputChild).to_output(category=category)
-        self.assertEqual(output, CategoryOutputChild(
-            id=category.id,
-            name=category.name,
-            description=category.description,
-            is_active=category.is_active,
-            created_at=category.created_at
-        ))
+        output = CategoryOutputMapper.from_child(CategoryOutputChild).to_output(
+            category=category
+        )
+        self.assertEqual(
+            output,
+            CategoryOutputChild(
+                id=category.id,
+                name=category.name,
+                description=category.description,
+                is_active=category.is_active,
+                created_at=category.created_at,
+            ),
+        )
 
         output = CategoryOutputMapper.without_child().to_output(category=category)
-        self.assertEqual(output, CategoryOutput(
-            id=category.id,
-            name=category.name,
-            description=category.description,
-            is_active=category.is_active,
-            created_at=category.created_at
-        ))
+        self.assertEqual(
+            output,
+            CategoryOutput(
+                id=category.id,
+                name=category.name,
+                description=category.description,
+                is_active=category.is_active,
+                created_at=category.created_at,
+            ),
+        )

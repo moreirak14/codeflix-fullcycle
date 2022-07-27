@@ -1,8 +1,7 @@
+# pylint: disable=unexpected-keyword-arg protected-access
 from dataclasses import dataclass
 from typing import List, Optional
 import unittest
-
-from tomlkit import item
 from __seedwork.domain.repositories import (
     ET,
     Filter,
@@ -19,12 +18,14 @@ from __seedwork.domain.entities import Entity
 
 
 class TestRepositoryInterface(unittest.TestCase):
-
     def test_throw_error_when_methods_not_implemented(self):
         with self.assertRaises(TypeError) as assert_error:
-            RepositoryInterface()
+            RepositoryInterface()  # pylint: disable=abstract-class-instantiated
         self.assertEqual(
-            assert_error.exception.args[0], "Can't instantiate abstract class RepositoryInterface with abstract methods delete, find_all, find_by_id, insert, update")
+            assert_error.exception.args[0],
+            "Can't instantiate abstract class RepositoryInterface with abstract" +
+            " methods delete, find_all, find_by_id, insert, update",
+        )
 
 
 @dataclass(frozen=True, kw_only=True, slots=True)
@@ -56,14 +57,16 @@ class TestInMemoryRepository(unittest.TestCase):
         with self.assertRaises(NotFoundException) as assert_error:
             self.repo.find_by_id("fake id")
         self.assertEqual(
-            assert_error.exception.args[0], "Entity not found using ID: fake id")
+            assert_error.exception.args[0], "Entity not found using ID: fake id"
+        )
 
-        unique_entity_id = UniqueEntityId(
-            "6eac08e5-5a54-4d2b-afeb-16253d0e75fb")
+        unique_entity_id = UniqueEntityId("6eac08e5-5a54-4d2b-afeb-16253d0e75fb")
         with self.assertRaises(NotFoundException) as assert_error:
             self.repo.find_by_id(unique_entity_id)
         self.assertEqual(
-            assert_error.exception.args[0], "Entity not found using ID: 6eac08e5-5a54-4d2b-afeb-16253d0e75fb")
+            assert_error.exception.args[0],
+            "Entity not found using ID: 6eac08e5-5a54-4d2b-afeb-16253d0e75fb",
+        )
 
     def test_find_by_id(self):
         entity = StubEntity(name="test", price=5)
@@ -91,19 +94,22 @@ class TestInMemoryRepository(unittest.TestCase):
         with self.assertRaises(NotFoundException) as assert_error:
             self.repo.find_by_id(entity.id)
         self.assertEqual(
-            assert_error.exception.args[0], f"Entity not found using ID: {entity.id}")
+            assert_error.exception.args[0], f"Entity not found using ID: {entity.id}"
+        )
 
         with self.assertRaises(NotFoundException) as assert_error:
             self.repo.find_by_id(entity.unique_entity_id)
         self.assertEqual(
-            assert_error.exception.args[0], f"Entity not found using ID: {entity.id}")
+            assert_error.exception.args[0], f"Entity not found using ID: {entity.id}"
+        )
 
     def test_update(self):
         entity = StubEntity(name="test", price=5)
         self.repo.insert(entity)
 
         entity_updated = StubEntity(
-            unique_entity_id=entity.unique_entity_id, name="updated", price=6)
+            unique_entity_id=entity.unique_entity_id, name="updated", price=6
+        )
         self.repo.update(entity=entity_updated)
         self.assertEqual(entity_updated, self.repo.items[0])
 
@@ -113,12 +119,14 @@ class TestInMemoryRepository(unittest.TestCase):
         with self.assertRaises(NotFoundException) as assert_error:
             self.repo.delete(entity.id)
         self.assertEqual(
-            assert_error.exception.args[0], f"Entity not found using ID: {entity.id}")
+            assert_error.exception.args[0], f"Entity not found using ID: {entity.id}"
+        )
 
         with self.assertRaises(NotFoundException) as assert_error:
             self.repo.delete(entity.unique_entity_id)
         self.assertEqual(
-            assert_error.exception.args[0], f"Entity not found using ID: {entity.id}")
+            assert_error.exception.args[0], f"Entity not found using ID: {entity.id}"
+        )
 
     def test_delete(self):
         entity = StubEntity(name="test", price=5)
@@ -133,29 +141,31 @@ class TestInMemoryRepository(unittest.TestCase):
 
 
 class TestSearchableRepositoryInterface(unittest.TestCase):
-
     def test_throw_error_when_methods_not_implemented(self):
         with self.assertRaises(TypeError) as assert_error:
-            SearchableRepositoryInterface()
+            SearchableRepositoryInterface()  # pylint: disable=abstract-class-instantiated
         self.assertEqual(
             assert_error.exception.args[0],
-            "Can't instantiate abstract class SearchableRepositoryInterface " +
-            "with abstract methods delete, find_all, find_by_id, insert, search, update")
+            "Can't instantiate abstract class SearchableRepositoryInterface "
+            + "with abstract methods delete, find_all, find_by_id, insert, search, update",
+        )
 
     def test_sortable_fields_prop(self):
         self.assertEqual(SearchableRepositoryInterface.sortable_fields, [])
 
 
 class TestSearchParams(unittest.TestCase):
-
     def test_props_annotations(self):
-        self.assertEqual(SearchParams.__annotations__, {
-            "page": Optional[int],
-            "per_page": Optional[int],
-            "sort": Optional[str],
-            "sort_dir": Optional[str],
-            "filter": Optional[Filter]
-        })
+        self.assertEqual(
+            SearchParams.__annotations__,
+            {
+                "page": Optional[int],
+                "per_page": Optional[int],
+                "sort": Optional[str],
+                "sort_dir": Optional[str],
+                "filter": Optional[Filter],
+            },
+        )
 
     def test_page_prop(self):
         params = SearchParams()
@@ -277,38 +287,40 @@ class TestSearchParams(unittest.TestCase):
 
 
 class TestSearchResult(unittest.TestCase):
-
     def test_props_annotations(self):
-        self.assertEqual(SearchResult.__annotations__, {
-            "items": List[ET],
-            "total": int,
-            "current_page": int,
-            "per_page": int,
-            "last_page": int,
-            "sort": Optional[str],
-            "sort_dir": Optional[str],
-            "filter": Optional[Filter]
-        })
+        self.assertEqual(
+            SearchResult.__annotations__,
+            {
+                "items": List[ET],
+                "total": int,
+                "current_page": int,
+                "per_page": int,
+                "last_page": int,
+                "sort": Optional[str],
+                "sort_dir": Optional[str],
+                "filter": Optional[Filter],
+            },
+        )
 
     def test_constructor(self):
         entity = StubEntity(name="fake", price=5)
         result = SearchResult(
-            items=[entity, entity],
-            total=4,
-            current_page=1,
-            per_page=2
+            items=[entity, entity], total=4, current_page=1, per_page=2
         )
 
-        self.assertDictEqual(result.to_dict(), {
-            "items": [entity, entity],
-            "total": 4,
-            "current_page": 1,
-            "per_page": 2,
-            "last_page": 2,
-            "sort": None,
-            "sort_dir": None,
-            "filter": None,
-        })
+        self.assertDictEqual(
+            result.to_dict(),
+            {
+                "items": [entity, entity],
+                "total": 4,
+                "current_page": 1,
+                "per_page": 2,
+                "last_page": 2,
+                "sort": None,
+                "sort_dir": None,
+                "filter": None,
+            },
+        )
 
         result = SearchResult(
             items=[entity, entity],
@@ -320,43 +332,41 @@ class TestSearchResult(unittest.TestCase):
             filter="test",
         )
 
-        self.assertDictEqual(result.to_dict(), {
-            "items": [entity, entity],
-            "total": 4,
-            "current_page": 1,
-            "per_page": 2,
-            "last_page": 2,
-            "sort": "name",
-            "sort_dir": "asc",
-            "filter": "test",
-        })
+        self.assertDictEqual(
+            result.to_dict(),
+            {
+                "items": [entity, entity],
+                "total": 4,
+                "current_page": 1,
+                "per_page": 2,
+                "last_page": 2,
+                "sort": "name",
+                "sort_dir": "asc",
+                "filter": "test",
+            },
+        )
 
     def test_when_per_page_is_greater_than_total(self):
-        result = SearchResult(
-            items=[],
-            total=4,
-            current_page=1,
-            per_page=15
-        )
+        result = SearchResult(items=[], total=4, current_page=1, per_page=15)
         self.assertEqual(result.last_page, 1)
 
     def test_when_per_page_is_less_than_total_and_they_are_not_multiples(self):
-        result = SearchResult(
-            items=[],
-            total=101,
-            current_page=1,
-            per_page=20
-        )
+        result = SearchResult(items=[], total=101, current_page=1, per_page=20)
         self.assertEqual(result.last_page, 6)
 
 
 class StubInMemorySearchableRepository(InMemorySearchableRepository[StubEntity, str]):
     sortable_fields: List[str] = ["name"]
 
-    def _apply_filter(self, items: List[StubEntity], filter_param: str | None) -> List[StubEntity]:
+    def _apply_filter(
+        self, items: List[StubEntity], filter_param: str | None
+    ) -> List[StubEntity]:
         if filter_param:
-            filter_obj = filter(lambda i: filter_param.lower() in i.name.lower()
-                                or filter_param == str(i.price), items)
+            filter_obj = filter(
+                lambda i: filter_param.lower() in i.name.lower()
+                or filter_param == str(i.price),
+                items,
+            )
             return list(filter_obj)
         return items
 
@@ -438,15 +448,18 @@ class TestInMemorySearchableRepository(unittest.TestCase):
         self.repo.items = items
 
         result = self.repo.search(SearchParams())
-        self.assertEqual(result, SearchResult(
-            items=[entity]*15,
-            total=16,
-            current_page=1,
-            per_page=15,
-            sort=None,
-            sort_dir=None,
-            filter=None
-        ))
+        self.assertEqual(
+            result,
+            SearchResult(
+                items=[entity] * 15,
+                total=16,
+                current_page=1,
+                per_page=15,
+                sort=None,
+                sort_dir=None,
+                filter=None,
+            ),
+        )
 
     def test_search_applying_filter_and_paginate(self):
         items = [
@@ -457,41 +470,47 @@ class TestInMemorySearchableRepository(unittest.TestCase):
         ]
         self.repo.items = items
 
-        result = self.repo.search(SearchParams(
-            page=1, per_page=2, filter="TEST"))
-        self.assertEqual(result, SearchResult(
-            items=[items[0], items[2]],
-            total=3,
-            current_page=1,
-            per_page=2,
-            sort=None,
-            sort_dir=None,
-            filter="TEST"
-        ))
+        result = self.repo.search(SearchParams(page=1, per_page=2, filter="TEST"))
+        self.assertEqual(
+            result,
+            SearchResult(
+                items=[items[0], items[2]],
+                total=3,
+                current_page=1,
+                per_page=2,
+                sort=None,
+                sort_dir=None,
+                filter="TEST",
+            ),
+        )
 
-        result = self.repo.search(SearchParams(
-            page=2, per_page=2, filter="TEST"))
-        self.assertEqual(result, SearchResult(
-            items=[items[3]],
-            total=3,
-            current_page=2,
-            per_page=2,
-            sort=None,
-            sort_dir=None,
-            filter="TEST"
-        ))
+        result = self.repo.search(SearchParams(page=2, per_page=2, filter="TEST"))
+        self.assertEqual(
+            result,
+            SearchResult(
+                items=[items[3]],
+                total=3,
+                current_page=2,
+                per_page=2,
+                sort=None,
+                sort_dir=None,
+                filter="TEST",
+            ),
+        )
 
-        result = self.repo.search(SearchParams(
-            page=3, per_page=2, filter="TEST"))
-        self.assertEqual(result, SearchResult(
-            items=[],
-            total=3,
-            current_page=3,
-            per_page=2,
-            sort=None,
-            sort_dir=None,
-            filter="TEST"
-        ))
+        result = self.repo.search(SearchParams(page=3, per_page=2, filter="TEST"))
+        self.assertEqual(
+            result,
+            SearchResult(
+                items=[],
+                total=3,
+                current_page=3,
+                per_page=2,
+                sort=None,
+                sort_dir=None,
+                filter="TEST",
+            ),
+        )
 
     def test_search_applying_sort_and_paginate(self):
         items = [
@@ -513,8 +532,8 @@ class TestInMemorySearchableRepository(unittest.TestCase):
                     per_page=2,
                     sort="name",
                     sort_dir="asc",
-                    filter=None
-                )
+                    filter=None,
+                ),
             },
             {
                 "input": SearchParams(page=2, per_page=2, sort="name"),
@@ -525,8 +544,8 @@ class TestInMemorySearchableRepository(unittest.TestCase):
                     per_page=2,
                     sort="name",
                     sort_dir="asc",
-                    filter=None
-                )
+                    filter=None,
+                ),
             },
             {
                 "input": SearchParams(page=3, per_page=2, sort="name"),
@@ -537,15 +556,18 @@ class TestInMemorySearchableRepository(unittest.TestCase):
                     per_page=2,
                     sort="name",
                     sort_dir="asc",
-                    filter=None
-                )
+                    filter=None,
+                ),
             },
         ]
 
         for index, item in enumerate(arrange_by_asc):
             result = self.repo.search(item["input"])
             self.assertEqual(
-                result, item["output"], f"The output using sort_dir asc on index {index} is different.")
+                result,
+                item["output"],
+                f"The output using sort_dir asc on index {index} is different.",
+            )
 
         arrange_by_desc = [
             {
@@ -557,8 +579,8 @@ class TestInMemorySearchableRepository(unittest.TestCase):
                     per_page=2,
                     sort="name",
                     sort_dir="desc",
-                    filter=None
-                )
+                    filter=None,
+                ),
             },
             {
                 "input": SearchParams(page=2, per_page=2, sort="name", sort_dir="desc"),
@@ -569,8 +591,8 @@ class TestInMemorySearchableRepository(unittest.TestCase):
                     per_page=2,
                     sort="name",
                     sort_dir="desc",
-                    filter=None
-                )
+                    filter=None,
+                ),
             },
             {
                 "input": SearchParams(page=3, per_page=2, sort="name", sort_dir="desc"),
@@ -581,15 +603,18 @@ class TestInMemorySearchableRepository(unittest.TestCase):
                     per_page=2,
                     sort="name",
                     sort_dir="desc",
-                    filter=None
-                )
+                    filter=None,
+                ),
             },
         ]
 
         for index, item in enumerate(arrange_by_desc):
             result = self.repo.search(item["input"])
             self.assertEqual(
-                result, item["output"], f"The output using sort_dir desc on index {index} is different.")
+                result,
+                item["output"],
+                f"The output using sort_dir desc on index {index} is different.",
+            )
 
     def test_search_applying_filter_and_sort_and_paginate(self):
         items = [
@@ -601,36 +626,46 @@ class TestInMemorySearchableRepository(unittest.TestCase):
         ]
         self.repo.items = items
 
-        result = self.repo.search(SearchParams(
-            page=1,
-            per_page=2,
-            sort="name",
-            sort_dir="asc",
-            filter="TEST",
-        ))
-        self.assertEqual(result, SearchResult(
-            items=[items[2], items[4]],
-            total=3,
-            current_page=1,
-            per_page=2,
-            sort="name",
-            sort_dir="asc",
-            filter="TEST"
-        ))
+        result = self.repo.search(
+            SearchParams(
+                page=1,
+                per_page=2,
+                sort="name",
+                sort_dir="asc",
+                filter="TEST",
+            )
+        )
+        self.assertEqual(
+            result,
+            SearchResult(
+                items=[items[2], items[4]],
+                total=3,
+                current_page=1,
+                per_page=2,
+                sort="name",
+                sort_dir="asc",
+                filter="TEST",
+            ),
+        )
 
-        result = self.repo.search(SearchParams(
-            page=2,
-            per_page=2,
-            sort="name",
-            sort_dir="asc",
-            filter="TEST",
-        ))
-        self.assertEqual(result, SearchResult(
-            items=[items[0]],
-            total=3,
-            current_page=2,
-            per_page=2,
-            sort="name",
-            sort_dir="asc",
-            filter="TEST"
-        ))
+        result = self.repo.search(
+            SearchParams(
+                page=2,
+                per_page=2,
+                sort="name",
+                sort_dir="asc",
+                filter="TEST",
+            )
+        )
+        self.assertEqual(
+            result,
+            SearchResult(
+                items=[items[0]],
+                total=3,
+                current_page=2,
+                per_page=2,
+                sort="name",
+                sort_dir="asc",
+                filter="TEST",
+            ),
+        )

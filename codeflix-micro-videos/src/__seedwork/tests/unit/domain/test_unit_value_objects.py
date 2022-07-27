@@ -1,3 +1,4 @@
+#pylint: disable=protected-access
 from abc import ABC
 from dataclasses import FrozenInstanceError, dataclass, is_dataclass
 import unittest
@@ -19,7 +20,6 @@ class StubTwoProp(ValueObject):
 
 
 class TestValueObjectUnit(unittest.TestCase):
-
     def test_if_is_a_dataclass(self):
         self.assertTrue(is_dataclass(ValueObject))
 
@@ -48,7 +48,6 @@ class TestValueObjectUnit(unittest.TestCase):
 
 
 class TestUniqueEntityIdUnit(unittest.TestCase):
-
     def test_if_is_a_dataclass(self):
         self.assertTrue(is_dataclass(UniqueEntityId))
 
@@ -57,29 +56,26 @@ class TestUniqueEntityIdUnit(unittest.TestCase):
             UniqueEntityId,
             "_UniqueEntityId__validate",
             autospec=True,
-            side_effect=UniqueEntityId._UniqueEntityId__validate
+            side_effect=UniqueEntityId._UniqueEntityId__validate,
         ) as mock_validate:
 
             with self.assertRaises(InvalidUuidException) as error:
                 UniqueEntityId("Fake ID")
 
             mock_validate.assert_called_once()
-            self.assertEqual(
-                error.exception.args[0], "ID must be a valid UUID")
+            self.assertEqual(error.exception.args[0], "ID must be a valid UUID")
 
     def test_accept_uuid_passed_in_constructor(self):
         with patch.object(
             UniqueEntityId,
             "_UniqueEntityId__validate",
             autospec=True,
-            side_effect=UniqueEntityId._UniqueEntityId__validate
+            side_effect=UniqueEntityId._UniqueEntityId__validate,
         ) as mock_validate:
 
-            value_object = UniqueEntityId(
-                "6eac08e5-5a54-4d2b-afeb-16253d0e75fb")
+            value_object = UniqueEntityId("6eac08e5-5a54-4d2b-afeb-16253d0e75fb")
             mock_validate.assert_called_once()
-            self.assertEqual(
-                value_object.id, "6eac08e5-5a54-4d2b-afeb-16253d0e75fb")
+            self.assertEqual(value_object.id, "6eac08e5-5a54-4d2b-afeb-16253d0e75fb")
 
         # without mock validate
         uuid_value = uuid.uuid4()
@@ -91,7 +87,7 @@ class TestUniqueEntityIdUnit(unittest.TestCase):
             UniqueEntityId,
             "_UniqueEntityId__validate",
             autospec=True,
-            side_effect=UniqueEntityId._UniqueEntityId__validate
+            side_effect=UniqueEntityId._UniqueEntityId__validate,
         ) as mock_validate:
             value_object = UniqueEntityId()
             uuid.UUID(value_object.id)

@@ -1,12 +1,12 @@
+# pylint: disable=unexpected-keyword-arg
 import unittest
-from datetime import datetime
-from category.domain.entities import Category
-from dataclasses import FrozenInstanceError, is_dataclass
 from unittest.mock import patch
+from datetime import datetime
+from dataclasses import FrozenInstanceError, is_dataclass
+from category.domain.entities import Category
 
 
 class TestCategoryUnit(unittest.TestCase):
-
     def test_if_is_a_dataclass(self):
         self.assertTrue(is_dataclass(Category))
 
@@ -24,7 +24,7 @@ class TestCategoryUnit(unittest.TestCase):
                 name="Movie",
                 description="some description",
                 is_active=False,
-                created_at=created_at
+                created_at=created_at,
             )
 
             self.assertEqual(category.name, "Movie")
@@ -37,8 +37,7 @@ class TestCategoryUnit(unittest.TestCase):
             category1 = Category(name="Movie 1")
             category2 = Category(name="Movie 2")
             self.assertNotEqual(
-                category1.created_at.timestamp(),
-                category2.created_at.timestamp()
+                category1.created_at.timestamp(), category2.created_at.timestamp()
             )
 
     def test_is_immutable(self):

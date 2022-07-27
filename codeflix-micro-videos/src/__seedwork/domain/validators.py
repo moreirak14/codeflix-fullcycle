@@ -35,11 +35,16 @@ class ValidatorRules:
     def max_length(self, max_length: int) -> "ValidatorRules":
         if self.value is not None and len(self.value) > max_length:
             raise ValidationException(
-                f"The {self.prop} must be less than {max_length} characters")
+                f"The {self.prop} must be less than {max_length} characters"
+            )
         return self
 
     def boolean(self) -> "ValidatorRules":
-        if self.value is not None and self.value is not True and self.value is not False:
+        if (
+            self.value is not None
+            and self.value is not True
+            and self.value is not False
+        ):
             raise ValidationException(f"The {self.prop} must be a boolean")
         return self
 
@@ -60,20 +65,18 @@ class ValidatorFieldsInterface(ABC, Generic[PropsValidated]):
 
 
 class DRFValidator(ValidatorFieldsInterface[PropsValidated], ABC):
-
     def validate(self, data: Serializer) -> bool:
         if data.is_valid():
             self.validated_data = dict(data.validated_data)
             return True
-        else:
-            self.errors = {
-                field: [str(_error) for _error in _errors] for field, _errors in data.errors.items()
-            }
-            return False
+        self.errors = {
+            field: [str(_error) for _error in _errors]
+            for field, _errors in data.errors.items()
+        }
+        return False
 
 
 class StrictCharField(CharField):
-
     def to_internal_value(self, data):
         if not isinstance(data, str):
             self.fail("invalid")
@@ -82,13 +85,12 @@ class StrictCharField(CharField):
 
 
 class StrictBooleanField(BooleanField):
-
     def to_internal_value(self, data):
         with contextlib.suppress(TypeError):
             if data is True:
                 return True
             if data is False:
                 return False
-            elif data is None and self.allow_null:
+            if data is None and self.allow_null:
                 return None
         self.fail("invalid", input=data)

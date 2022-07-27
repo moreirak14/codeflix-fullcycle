@@ -13,7 +13,6 @@ class StubEntity(Entity):
 
 
 class TestEntityUnit(unittest.TestCase):
-
     def test_if_is_a_dataclass(self):
         self.assertTrue(is_dataclass(Entity))
 
@@ -44,14 +43,15 @@ class TestEntityUnit(unittest.TestCase):
             prop2="value2",
         )
         self.assertDictEqual(
-            entity.to_dict(), {
+            entity.to_dict(),
+            {
                 "id": "6eac08e5-5a54-4d2b-afeb-16253d0e75fb",
                 "prop1": "value1",
                 "prop2": "value2",
-            }
+            },
         )
 
     def test_set_method(self):
         entity = StubEntity(prop1="value1", prop2="value2")
-        entity._set("prop1", "changed")
+        entity._set("prop1", "changed")  # pylint: disable=protected-access
         self.assertEqual(entity.prop1, "changed")
