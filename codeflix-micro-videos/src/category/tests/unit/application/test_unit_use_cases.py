@@ -150,8 +150,7 @@ class TestListCategoryUseCaseUnit(unittest.TestCase):
             spy_search.assert_called_once()
 
             self.assertEqual(output, self.use_case.Output(
-                items=list(map(CategoryOutputMapper.to_output,
-                           self.category_repo.items[::-1])),
+                items=list(map(CategoryOutputMapper.without_child().to_output, self.category_repo.items[::-1])),
                 total=2,
                 current_page=1,
                 per_page=15,
@@ -177,7 +176,7 @@ class TestListCategoryUseCaseUnit(unittest.TestCase):
         )
         output = self.use_case.execute(input_param=input_param)
         self.assertEqual(output, self.use_case.Output(
-            items=list(map(CategoryOutputMapper.to_output,
+            items=list(map(CategoryOutputMapper.without_child().to_output,
                            [items[1], items[2]])),
             total=3,
             current_page=1,
@@ -194,7 +193,7 @@ class TestListCategoryUseCaseUnit(unittest.TestCase):
         )
         output = self.use_case.execute(input_param=input_param)
         self.assertEqual(output, self.use_case.Output(
-            items=list(map(CategoryOutputMapper.to_output,
+            items=list(map(CategoryOutputMapper.without_child().to_output,
                            [items[0]])),
             total=3,
             current_page=2,
@@ -211,7 +210,7 @@ class TestListCategoryUseCaseUnit(unittest.TestCase):
         )
         output = self.use_case.execute(input_param=input_param)
         self.assertEqual(output, self.use_case.Output(
-            items=list(map(CategoryOutputMapper.to_output,
+            items=list(map(CategoryOutputMapper.without_child().to_output,
                            [items[0], items[2]])),
             total=3,
             current_page=1,
