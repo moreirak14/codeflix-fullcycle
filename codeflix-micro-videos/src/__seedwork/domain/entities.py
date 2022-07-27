@@ -7,7 +7,7 @@ from __seedwork.domain.value_objects import UniqueEntityId
 @dataclass(frozen=True, slots=True)
 class Entity(ABC):
 
-    unique_entity_id: UniqueEntityId = field(default_factory=lambda: UniqueEntityId())
+    unique_entity_id: UniqueEntityId = field(default_factory=UniqueEntityId)
 
     @property
     def id(self):  # pylint: disable=invalid-name
@@ -25,4 +25,4 @@ class Entity(ABC):
 
     @classmethod
     def get_field(cls, entity_field: str) -> Field:
-        return cls.__dataclass_fields__[entity_field]
+        return cls.__dataclass_fields__[entity_field]  # pylint: disable=no-member

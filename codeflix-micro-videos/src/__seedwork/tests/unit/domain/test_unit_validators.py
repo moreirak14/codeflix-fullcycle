@@ -155,7 +155,7 @@ class TestValidatorRulesUnit(unittest.TestCase):
         ValidatorRules("tests" * 1, "prop").required().string().max_length(5)
         ValidatorRules(True, "prop").required().boolean()
         ValidatorRules(False, "prop").required().boolean()
-        self.assertTrue(True)
+        self.assertTrue(True)  # pylint: disable=redundant-unittest-assert
 
 
 class TestValidatorFieldsInterfaceUnit(unittest.TestCase):
@@ -165,8 +165,8 @@ class TestValidatorFieldsInterfaceUnit(unittest.TestCase):
             ValidatorFieldsInterface()
         self.assertEqual(
             assert_error.exception.args[0],
-            "Can't instantiate abstract class ValidatorFieldsInterface"+
-            " with abstract method validate",
+            "Can't instantiate abstract class ValidatorFieldsInterface"
+            + " with abstract method validate",
         )
 
     def test_fields(self):

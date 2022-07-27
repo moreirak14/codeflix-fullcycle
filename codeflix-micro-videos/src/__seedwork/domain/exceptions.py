@@ -6,9 +6,8 @@ if TYPE_CHECKING:
 
 
 class InvalidUuidException(Exception):
-    def __init__(
-        self, error="ID must be a valid UUID"
-    ) -> None:  # pylint: disable=useless-super-delegation
+    # pylint: disable=useless-super-delegation
+    def __init__(self, error="ID must be a valid UUID") -> None:
         super().__init__(error)
 
 

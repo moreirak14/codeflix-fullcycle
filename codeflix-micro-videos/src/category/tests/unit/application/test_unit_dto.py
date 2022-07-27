@@ -1,4 +1,4 @@
-# pylint: disable=unexpected-keyword-arg
+# pylint: disable=unexpected-keyword-arg duplicate-code
 from datetime import datetime
 from typing import Optional
 import unittest

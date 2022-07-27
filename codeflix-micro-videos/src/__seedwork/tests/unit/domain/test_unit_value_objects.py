@@ -1,4 +1,4 @@
-#pylint: disable=protected-access
+# pylint: disable=protected-access
 from abc import ABC
 from dataclasses import FrozenInstanceError, dataclass, is_dataclass
 import unittest
