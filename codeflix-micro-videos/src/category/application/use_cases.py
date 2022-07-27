@@ -1,5 +1,6 @@
 from dataclasses import asdict, dataclass
 from typing import List, Optional
+from __seedwork.application.dto import PaginationOutput, PaginationOutputMapper, SearchInput
 from __seedwork.application.use_cases import UseCase
 from category.application.dto import CategoryOutput, CategoryOutputMapper
 from category.domain.entities import Category
@@ -65,26 +66,13 @@ class ListCategoryUseCase(UseCase):
         return self.__to_output(result=result)
 
     def __to_output(self, result: CategoryRepository.SearchResult):
-        return ListCategoryUseCase.Output(
-            items=list(map(CategoryOutputMapper.to_output, result.items)),
-            total=result.total,
-            current_page=result.current_page,
-            per_page=result.per_page,
-            last_page=result.last_page,
-        )
+        items = list(map(CategoryOutputMapper.to_output, result.items)),
+        return PaginationOutputMapper.from_child(output_child=ListCategoryUseCase.Output).to_output(items=items, result=result)
 
     @dataclass(slots=True, frozen=True)
-    class Input:
-        page: Optional[int] = None
-        per_page: Optional[int] = None
-        sort: Optional[str] = None
-        sort_dir: Optional[str] = None
-        filter: Optional[str] = None
+    class Input(SearchInput[str]):
+        pass
 
     @dataclass(slots=True, frozen=True)
-    class Output:
-        items: List[CategoryOutput]
-        total: int
-        current_page: int
-        per_page: int
-        last_page: int
+    class Output(PaginationOutput[CategoryOutput]):
+        pass
