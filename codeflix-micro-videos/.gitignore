@@ -135,3 +135,6 @@ dmypy.json
 
 __pypackages__
 .pytest_cache
+
+__coverage
+.coverage
