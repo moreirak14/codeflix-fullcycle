@@ -21,6 +21,7 @@ dev = [
     "pytest>=7.1.2",
 ]
 [tool.pdm.scripts]
+pep8 = "autopep8 --in-place --recursive ./src"
 test = "pytest --ignore __pypackages__"
 test_cov = "pytest --ignore __pypackages__ --cov ./src --cov-fail-under 80"
 test_cov_html = "pytest --ignore __pypackages__ --cov ./src --cov-report html:./__coverage"
