@@ -1,4 +1,4 @@
-# pylint: disable=unexpected-keyword-arg
+# pylint: disable=unexpected-keyword-arg no-member
 from datetime import datetime, timedelta
 from typing import Optional
 import unittest
@@ -8,8 +8,10 @@ from __seedwork.application.use_cases import UseCase
 from category.application.dto import CategoryOutput, CategoryOutputMapper
 from category.application.use_cases import (
     CreateCategoryUseCase,
+    DeleteCategoryUseCase,
     GetCategoryUseCase,
     ListCategoryUseCase,
+    UpdateCategoryUseCase,
 )
 from category.domain.entities import Category
 from category.infra.repositories import CategoryInMemoryRepository
@@ -137,7 +139,7 @@ class TestGetCategoryUseCaseUnit(unittest.TestCase):
 
     def test_execute(self):
         category = Category(name="Movie")
-        self.category_repo.items = [category]
+        self.category_repo.items = [category]  # pylint: disable=redefined-outer-name
 
         with patch.object(
             self.category_repo, "find_by_id", wraps=self.category_repo.find_by_id
@@ -266,3 +268,188 @@ class TestListCategoryUseCaseUnit(unittest.TestCase):
                 last_page=2,
             ),
         )
+
+
+class TestUpdateCategoryUseCaseUnit(unittest.TestCase):
+
+    use_case: UpdateCategoryUseCase
+    category_repo: CategoryInMemoryRepository
+
+    def setUp(self) -> None:
+        self.category_repo = CategoryInMemoryRepository()
+        self.use_case = UpdateCategoryUseCase(self.category_repo)
+
+    def test_if_instance_an_use_case(self):
+        self.assertIsInstance(self.use_case, UseCase)
+
+    def test_input(self):
+        self.assertEqual(
+            self.use_case.Input.__annotations__,
+            {
+                "id": str,
+                "name": str,
+                "description": Optional[str],
+                "is_active": Optional[bool],
+            },
+        )
+
+        description_field = self.use_case.Input.__dataclass_fields__["description"]
+        self.assertEqual(
+            description_field.default, Category.get_field("description").default
+        )
+        is_active_field = self.use_case.Input.__dataclass_fields__["is_active"]
+        self.assertEqual(
+            is_active_field.default, Category.get_field("is_active").default
+        )
+
+    def test_output(self):
+        self.assertTrue(issubclass(self.use_case.Output, CategoryOutput))
+
+    def test_throw_exception_when_category_not_found(self):
+        input_param = self.use_case.Input(id="not found", name="test")
+        with self.assertRaises(NotFoundException) as assert_error:
+            self.use_case.execute(input_param=input_param)
+        self.assertEqual(
+            assert_error.exception.args[0], "Entity not found using ID: not found"
+        )
+
+    def test_execute(self):
+        category = Category(name="test")
+        self.category_repo.items = [category]  # pylint: disable=redefined-outer-name
+
+        with patch.object(
+            self.category_repo, "find_by_id", wraps=self.category_repo.find_by_id
+        ) as spy_find_by_id:
+            input_param = self.use_case.Input(id=category.id, name="test")
+            self.use_case.execute(input_param=input_param)
+            spy_find_by_id.assert_called_once()
+
+        with patch.object(
+            self.category_repo, "update", wraps=self.category_repo.update
+        ) as spy_update:
+            input_param = self.use_case.Input(id=category.id, name="test 1")
+            output = self.use_case.execute(input_param=input_param)
+            spy_update.assert_called_once()
+            self.assertEqual(
+                output,
+                self.use_case.Output(
+                    id=category.id,
+                    name="test 1",
+                    description=None,
+                    is_active=True,
+                    created_at=category.created_at,
+                ),
+            )
+
+        arrange = [
+            {
+                "input": {
+                    "id": category.id,
+                    "name": "test 2",
+                    "description": "test description",
+                },
+                "expected": {
+                    "id": category.id,
+                    "name": "test 2",
+                    "description": "test description",
+                    "is_active": True,
+                    "created_at": category.created_at,
+                },
+            },
+            {
+                "input": {
+                    "id": category.id,
+                    "name": "test",
+                },
+                "expected": {
+                    "id": category.id,
+                    "name": "test",
+                    "description": None,
+                    "is_active": True,
+                    "created_at": category.created_at,
+                },
+            },
+            {
+                "input": {
+                    "id": category.id,
+                    "name": "test",
+                    "is_active": False,
+                },
+                "expected": {
+                    "id": category.id,
+                    "name": "test",
+                    "description": None,
+                    "is_active": False,
+                    "created_at": category.created_at,
+                },
+            },
+            {
+                "input": {
+                    "id": category.id,
+                    "name": "test",
+                    "is_active": True,
+                },
+                "expected": {
+                    "id": category.id,
+                    "name": "test",
+                    "description": None,
+                    "is_active": True,
+                    "created_at": category.created_at,
+                },
+            },
+            {
+                "input": {
+                    "id": category.id,
+                    "name": "test",
+                    "description": "test description",
+                    "is_active": False,
+                },
+                "expected": {
+                    "id": category.id,
+                    "name": "test",
+                    "description": "test description",
+                    "is_active": False,
+                    "created_at": category.created_at,
+                },
+            },
+        ]
+
+        for i in arrange:
+            input_param = self.use_case.Input(**i["input"])
+            output = self.use_case.execute(input_param=input_param)
+            self.assertEqual(output, self.use_case.Output(**i["expected"]))
+
+
+class TestDeleteCategoryUseCaseUnit(unittest.TestCase):
+
+    use_case: DeleteCategoryUseCase
+    category_repo: CategoryInMemoryRepository
+
+    def setUp(self) -> None:
+        self.category_repo = CategoryInMemoryRepository()
+        self.use_case = DeleteCategoryUseCase(self.category_repo)
+
+    def test_if_instance_an_use_case(self):
+        self.assertIsInstance(self.use_case, UseCase)
+
+    def test_input(self):
+        self.assertEqual(self.use_case.Input.__annotations__, {"id": str})
+
+    def test_throw_exception_when_category_not_found(self):
+        input_param = self.use_case.Input(id="not found")
+        with self.assertRaises(NotFoundException) as assert_error:
+            self.use_case.execute(input_param=input_param)
+        self.assertEqual(
+            assert_error.exception.args[0], "Entity not found using ID: not found"
+        )
+
+    def test_execute(self):
+        category = Category(name="test")
+        self.category_repo.items = [category]  # pylint: disable=redefined-outer-name
+        with patch.object(
+            self.category_repo, "delete", wraps=self.category_repo.delete
+        ) as spy_delete:
+            input_param = self.use_case.Input(id=category.id)
+            self.use_case.execute(input_param=input_param)
+            spy_delete.assert_called_once()
+            self.assertCountEqual(self.category_repo.items, [])
