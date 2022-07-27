@@ -42,7 +42,8 @@ class TestCategoryOutputMapperUnit(unittest.TestCase):
             created_at=created_at,
         )
 
-        output = CategoryOutputMapper.from_child(CategoryOutputChild).to_output(category=category)
+        output = CategoryOutputMapper.from_child(
+            CategoryOutputChild).to_output(category=category)
         self.assertEqual(output, CategoryOutputChild(
             id=category.id,
             name=category.name,

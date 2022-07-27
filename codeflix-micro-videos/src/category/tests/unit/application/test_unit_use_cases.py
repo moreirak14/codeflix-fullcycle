@@ -150,7 +150,8 @@ class TestListCategoryUseCaseUnit(unittest.TestCase):
             spy_search.assert_called_once()
 
             self.assertEqual(output, self.use_case.Output(
-                items=list(map(CategoryOutputMapper.without_child().to_output, self.category_repo.items[::-1])),
+                items=list(map(CategoryOutputMapper.without_child(
+                ).to_output, self.category_repo.items[::-1])),
                 total=2,
                 current_page=1,
                 per_page=15,

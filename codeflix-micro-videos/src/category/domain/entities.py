@@ -14,7 +14,7 @@ class Category(Entity):
     is_active: Optional[bool] = True
     created_at: Optional[datetime] = field(
         default_factory=lambda: datetime.now())
-   
+
     def __post_init__(self):
         if not self.created_at:
             self._set("created_at", datetime.now())
@@ -34,6 +34,6 @@ class Category(Entity):
     def validate(self):
         validator = CategoryValidatorFactory.create()
         is_valid = validator.validate(self.to_dict())
-        
+
         if not is_valid:
             raise EntityValidationException(validator.errors)

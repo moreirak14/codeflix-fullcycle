@@ -607,7 +607,7 @@ class TestInMemorySearchableRepository(unittest.TestCase):
             sort="name",
             sort_dir="asc",
             filter="TEST",
-            ))
+        ))
         self.assertEqual(result, SearchResult(
             items=[items[2], items[4]],
             total=3,
@@ -624,7 +624,7 @@ class TestInMemorySearchableRepository(unittest.TestCase):
             sort="name",
             sort_dir="asc",
             filter="TEST",
-            ))
+        ))
         self.assertEqual(result, SearchResult(
             items=[items[0]],
             total=3,
