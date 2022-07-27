@@ -3,7 +3,7 @@ from typing import Optional
 import unittest
 from unittest.mock import patch
 from __seedwork.domain.exceptions import NotFoundException
-from __seedwork.application.use_cases import Output, UseCase
+from __seedwork.application.use_cases import UseCase
 from category.application.dto import CategoryOutput, CategoryOutputMapper
 from category.application.use_cases import CreateCategoryUseCase, GetCategoryUseCase, ListCategoryUseCase
 from category.domain.entities import Category
