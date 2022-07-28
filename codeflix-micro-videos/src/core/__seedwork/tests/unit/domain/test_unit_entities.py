@@ -28,8 +28,7 @@ class TestEntityUnit(unittest.TestCase):
 
     def test_accept_a_valid_uuid(self):
         entity = StubEntity(
-            unique_entity_id=UniqueEntityId(
-                "6eac08e5-5a54-4d2b-afeb-16253d0e75fb"),
+            unique_entity_id=UniqueEntityId("6eac08e5-5a54-4d2b-afeb-16253d0e75fb"),
             prop1="value1",
             prop2="value2",
         )
@@ -37,8 +36,7 @@ class TestEntityUnit(unittest.TestCase):
 
     def test_to_dict_method(self):
         entity = StubEntity(
-            unique_entity_id=UniqueEntityId(
-                "6eac08e5-5a54-4d2b-afeb-16253d0e75fb"),
+            unique_entity_id=UniqueEntityId("6eac08e5-5a54-4d2b-afeb-16253d0e75fb"),
             prop1="value1",
             prop2="value2",
         )

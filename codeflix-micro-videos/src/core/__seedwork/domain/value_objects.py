@@ -13,8 +13,7 @@ class ValueObject(ABC):
             str(getattr(self, fields_name[0]))
             if len(fields_name) == 1
             else json.dumps(
-                {field_name: getattr(self, field_name)
-                 for field_name in fields_name}
+                {field_name: getattr(self, field_name) for field_name in fields_name}
             )
         )
 

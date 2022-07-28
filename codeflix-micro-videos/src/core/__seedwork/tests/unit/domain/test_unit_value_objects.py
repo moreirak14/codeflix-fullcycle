@@ -63,8 +63,7 @@ class TestUniqueEntityIdUnit(unittest.TestCase):
                 UniqueEntityId("Fake ID")
 
             mock_validate.assert_called_once()
-            self.assertEqual(
-                error.exception.args[0], "ID must be a valid UUID")
+            self.assertEqual(error.exception.args[0], "ID must be a valid UUID")
 
     def test_accept_uuid_passed_in_constructor(self):
         with patch.object(
@@ -74,11 +73,9 @@ class TestUniqueEntityIdUnit(unittest.TestCase):
             side_effect=UniqueEntityId._UniqueEntityId__validate,
         ) as mock_validate:
 
-            value_object = UniqueEntityId(
-                "6eac08e5-5a54-4d2b-afeb-16253d0e75fb")
+            value_object = UniqueEntityId("6eac08e5-5a54-4d2b-afeb-16253d0e75fb")
             mock_validate.assert_called_once()
-            self.assertEqual(
-                value_object.id, "6eac08e5-5a54-4d2b-afeb-16253d0e75fb")
+            self.assertEqual(value_object.id, "6eac08e5-5a54-4d2b-afeb-16253d0e75fb")
 
         # without mock validate
         uuid_value = uuid.uuid4()

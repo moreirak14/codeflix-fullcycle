@@ -78,8 +78,7 @@ class SearchParams(Generic[Filter]):
         self.per_page = per_page
 
     def _normalize_sort(self):
-        self.sort = None if self.sort == "" or self.sort is None else str(
-            self.sort)
+        self.sort = None if self.sort == "" or self.sort is None else str(self.sort)
 
     def _normalize_sort_dir(self):
         if not self.sort:
@@ -91,8 +90,7 @@ class SearchParams(Generic[Filter]):
 
     def _normalize_filter(self):
         self.filter = (
-            None if self.filter == "" or self.filter is None else str(
-                self.filter)
+            None if self.filter == "" or self.filter is None else str(self.filter)
         )
 
     def _convert_to_int(self, value: Any, default=0) -> int:
@@ -168,8 +166,7 @@ class InMemoryRepository(RepositoryInterface[ET], ABC):
 class InMemorySearchableRepository(
     Generic[ET, Filter],
     InMemoryRepository[ET],
-    SearchableRepositoryInterface[ET,
-                                  SearchParams[Filter], SearchResult[ET, Filter]],
+    SearchableRepositoryInterface[ET, SearchParams[Filter], SearchResult[ET, Filter]],
     ABC,
 ):
     def search(self, input_params: SearchParams[Filter]) -> SearchResult[ET, Filter]:

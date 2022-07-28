@@ -60,8 +60,7 @@ class TestInMemoryRepository(unittest.TestCase):
             assert_error.exception.args[0], "Entity not found using ID: fake id"
         )
 
-        unique_entity_id = UniqueEntityId(
-            "6eac08e5-5a54-4d2b-afeb-16253d0e75fb")
+        unique_entity_id = UniqueEntityId("6eac08e5-5a54-4d2b-afeb-16253d0e75fb")
         with self.assertRaises(NotFoundException) as assert_error:
             self.repo.find_by_id(unique_entity_id)
         self.assertEqual(
@@ -471,8 +470,7 @@ class TestInMemorySearchableRepository(unittest.TestCase):
         ]
         self.repo.items = items
 
-        result = self.repo.search(SearchParams(
-            page=1, per_page=2, filter="TEST"))
+        result = self.repo.search(SearchParams(page=1, per_page=2, filter="TEST"))
         self.assertEqual(
             result,
             SearchResult(
@@ -486,8 +484,7 @@ class TestInMemorySearchableRepository(unittest.TestCase):
             ),
         )
 
-        result = self.repo.search(SearchParams(
-            page=2, per_page=2, filter="TEST"))
+        result = self.repo.search(SearchParams(page=2, per_page=2, filter="TEST"))
         self.assertEqual(
             result,
             SearchResult(
@@ -501,8 +498,7 @@ class TestInMemorySearchableRepository(unittest.TestCase):
             ),
         )
 
-        result = self.repo.search(SearchParams(
-            page=3, per_page=2, filter="TEST"))
+        result = self.repo.search(SearchParams(page=3, per_page=2, filter="TEST"))
         self.assertEqual(
             result,
             SearchResult(

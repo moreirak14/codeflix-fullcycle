@@ -49,15 +49,13 @@ class TestCreateCategoryUseCaseUnit(unittest.TestCase):
             "description"
         ].default
         self.assertEqual(
-            description_field_default, Category.get_field(
-                "description").default
+            description_field_default, Category.get_field("description").default
         )
 
         is_active_default = self.use_case.Input.__dataclass_fields__[
             "is_active"
         ].default
-        self.assertEqual(is_active_default,
-                         Category.get_field("is_active").default)
+        self.assertEqual(is_active_default, Category.get_field("is_active").default)
 
     def test_output(self):
         self.assertTrue(issubclass(self.use_case.Output, CategoryOutput))
@@ -147,8 +145,7 @@ class TestGetCategoryUseCaseUnit(unittest.TestCase):
 
     def test_execute(self):
         category = Category(name="Movie")
-        self.category_repo.items = [
-            category]  # pylint: disable=redefined-outer-name
+        self.category_repo.items = [category]  # pylint: disable=redefined-outer-name
 
         with patch.object(
             self.category_repo, "find_by_id", wraps=self.category_repo.find_by_id
@@ -199,8 +196,7 @@ class TestListCategoryUseCaseUnit(unittest.TestCase):
         }
 
         result = CategoryRepository.SearchResult(items=[], **default_props)
-        output = self.use_case.__to_output(
-            result)  # pylint: disable=protected-access
+        output = self.use_case.__to_output(result)  # pylint: disable=protected-access
         self.assertEqual(
             output,
             self.use_case.Output(
@@ -212,10 +208,8 @@ class TestListCategoryUseCaseUnit(unittest.TestCase):
             ),
         )
 
-        result = CategoryRepository.SearchResult(
-            items=[entity], **default_props)
-        output = self.use_case.__to_output(
-            result)  # pylint: disable=protected-access
+        result = CategoryRepository.SearchResult(items=[entity], **default_props)
+        output = self.use_case.__to_output(result)  # pylint: disable=protected-access
         items = [CategoryOutputMapper.without_child().to_output(entity)]
         self.assertEqual(
             output,
@@ -227,8 +221,7 @@ class TestListCategoryUseCaseUnit(unittest.TestCase):
     def test_execute_using_empty_search_params(self):
         self.category_repo.items = [
             Category(name="test 1"),
-            Category(name="test 2", created_at=datetime.now() +
-                     timedelta(seconds=200)),
+            Category(name="test 2", created_at=datetime.now() + timedelta(seconds=200)),
         ]
         with patch.object(
             self.category_repo, "search", wraps=self.category_repo.search
@@ -290,8 +283,7 @@ class TestListCategoryUseCaseUnit(unittest.TestCase):
             output,
             self.use_case.Output(
                 items=list(
-                    map(CategoryOutputMapper.without_child(
-                    ).to_output, [items[0]])
+                    map(CategoryOutputMapper.without_child().to_output, [items[0]])
                 ),
                 total=3,
                 current_page=2,
@@ -344,11 +336,9 @@ class TestUpdateCategoryUseCaseUnit(unittest.TestCase):
             },
         )
 
-        description_field = self.use_case.Input.__dataclass_fields__[
-            "description"]
+        description_field = self.use_case.Input.__dataclass_fields__["description"]
         self.assertEqual(
-            description_field.default, Category.get_field(
-                "description").default
+            description_field.default, Category.get_field("description").default
         )
         is_active_field = self.use_case.Input.__dataclass_fields__["is_active"]
         self.assertEqual(
@@ -368,8 +358,7 @@ class TestUpdateCategoryUseCaseUnit(unittest.TestCase):
 
     def test_execute(self):
         category = Category(name="test")
-        self.category_repo.items = [
-            category]  # pylint: disable=redefined-outer-name
+        self.category_repo.items = [category]  # pylint: disable=redefined-outer-name
 
         with patch.object(
             self.category_repo, "find_by_id", wraps=self.category_repo.find_by_id
@@ -499,8 +488,7 @@ class TestDeleteCategoryUseCaseUnit(unittest.TestCase):
 
     def test_execute(self):
         category = Category(name="test")
-        self.category_repo.items = [
-            category]  # pylint: disable=redefined-outer-name
+        self.category_repo.items = [category]  # pylint: disable=redefined-outer-name
         with patch.object(
             self.category_repo, "delete", wraps=self.category_repo.delete
         ) as spy_delete:

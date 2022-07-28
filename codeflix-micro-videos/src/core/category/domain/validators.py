@@ -9,8 +9,7 @@ from core.__seedwork.domain.validators import (
 
 class CategoryRules(serializers.Serializer):  # pylint: disable=abstract-method
     name = StrictCharField(max_length=255)
-    description = StrictCharField(
-        required=False, allow_null=True, allow_blank=True)
+    description = StrictCharField(required=False, allow_null=True, allow_blank=True)
     is_active = StrictBooleanField(required=False)
     created_at = serializers.DateTimeField(required=False)
 

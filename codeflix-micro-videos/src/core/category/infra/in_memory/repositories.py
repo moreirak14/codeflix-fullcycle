@@ -11,8 +11,7 @@ class CategoryInMemoryRepository(CategoryRepository, InMemorySearchableRepositor
         self, items: List[Category], filter_param: str | None
     ) -> List[Category]:
         if filter_param:
-            filter_obj = filter(lambda i: filter_param.lower()
-                                in i.name.lower(), items)
+            filter_obj = filter(lambda i: filter_param.lower() in i.name.lower(), items)
             return list(filter_obj)
         return items
 

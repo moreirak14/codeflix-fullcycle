@@ -28,8 +28,7 @@ class TestValidatorRulesUnit(unittest.TestCase):
             msg = f'value: {i["value"]}, prop: {i["prop"]}'
             with self.assertRaises(ValidationException, msg=msg) as assert_error:
                 ValidatorRules.values(i["value"], i["prop"]).required()
-            self.assertEqual("The prop is required",
-                             assert_error.exception.args[0])
+            self.assertEqual("The prop is required", assert_error.exception.args[0])
 
         valid_data = [
             {"value": "test", "prop": "prop"},
@@ -40,8 +39,7 @@ class TestValidatorRulesUnit(unittest.TestCase):
 
         for i in valid_data:
             self.assertIsInstance(
-                ValidatorRules.values(
-                    i["value"], i["prop"]).required(), ValidatorRules
+                ValidatorRules.values(i["value"], i["prop"]).required(), ValidatorRules
             )
 
     def test_string_rule(self):
@@ -68,8 +66,7 @@ class TestValidatorRulesUnit(unittest.TestCase):
 
         for i in valid_data:
             self.assertIsInstance(
-                ValidatorRules.values(
-                    i["value"], i["prop"]).string(), ValidatorRules
+                ValidatorRules.values(i["value"], i["prop"]).string(), ValidatorRules
             )
 
     def test_max_length_rule(self):
@@ -122,28 +119,23 @@ class TestValidatorRulesUnit(unittest.TestCase):
 
         for i in valid_data:
             self.assertIsInstance(
-                ValidatorRules.values(
-                    i["value"], i["prop"]).boolean(), ValidatorRules
+                ValidatorRules.values(i["value"], i["prop"]).boolean(), ValidatorRules
             )
 
     def test_throw_a_validation_exception_when_combine_two_or_more_rules(self):
         # the value is required, it's not None or ""
         with self.assertRaises(ValidationException) as assert_error:
-            ValidatorRules.values(
-                None, "prop").required().string().max_length(5)
-        self.assertEqual("The prop is required",
-                         assert_error.exception.args[0])
+            ValidatorRules.values(None, "prop").required().string().max_length(5)
+        self.assertEqual("The prop is required", assert_error.exception.args[0])
 
         # the value is not string
         with self.assertRaises(ValidationException) as assert_error:
             ValidatorRules.values(5, "prop").required().string().max_length(5)
-        self.assertEqual("The prop must be a string",
-                         assert_error.exception.args[0])
+        self.assertEqual("The prop must be a string", assert_error.exception.args[0])
 
         # the max_length is not value accept
         with self.assertRaises(ValidationException) as assert_error:
-            ValidatorRules.values(
-                "t" * 6, "prop").required().string().max_length(5)
+            ValidatorRules.values("t" * 6, "prop").required().string().max_length(5)
         self.assertEqual(
             "The prop must be less than 5 characters", assert_error.exception.args[0]
         )
@@ -151,14 +143,12 @@ class TestValidatorRulesUnit(unittest.TestCase):
         # the value is required, it's not None or ""
         with self.assertRaises(ValidationException) as assert_error:
             ValidatorRules.values(None, "prop").required()
-        self.assertEqual("The prop is required",
-                         assert_error.exception.args[0])
+        self.assertEqual("The prop is required", assert_error.exception.args[0])
 
         # the is not value accept (False or True)
         with self.assertRaises(ValidationException) as assert_error:
             ValidatorRules.values(5, "prop").required().boolean()
-        self.assertEqual("The prop must be a boolean",
-                         assert_error.exception.args[0])
+        self.assertEqual("The prop must be a boolean", assert_error.exception.args[0])
 
     def test_valid_cases_for_combination_between_rules(self):
         ValidatorRules("test", "prop").required().string()

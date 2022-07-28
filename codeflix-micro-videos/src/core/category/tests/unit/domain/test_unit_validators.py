@@ -13,13 +13,11 @@ class TestCategoryValidatorUnit(unittest.TestCase):
     def test_invalidation_cases_for_name_field(self):
         is_valid = self.validator.validate(None)
         self.assertFalse(is_valid)
-        self.assertListEqual(self.validator.errors["name"], [
-                             "This field is required."])
+        self.assertListEqual(self.validator.errors["name"], ["This field is required."])
 
         is_valid = self.validator.validate({})
         self.assertFalse(is_valid)
-        self.assertListEqual(self.validator.errors["name"], [
-                             "This field is required."])
+        self.assertListEqual(self.validator.errors["name"], ["This field is required."])
 
         is_valid = self.validator.validate({"name": None})
         self.assertFalse(is_valid)
@@ -70,8 +68,7 @@ class TestCategoryValidatorUnit(unittest.TestCase):
         is_valid = self.validator.validate({"created_at": None})
         self.assertFalse(is_valid)
         self.assertListEqual(
-            self.validator.errors["created_at"], [
-                "This field may not be null."]
+            self.validator.errors["created_at"], ["This field may not be null."]
         )
 
         is_valid = self.validator.validate({"created_at": 5})

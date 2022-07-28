@@ -30,16 +30,14 @@ class TestCategoryIntegration(unittest.TestCase):
         with self.assertRaises(EntityValidationException) as assert_error:
             Category(name="Movie", description=5)
         self.assertEqual(
-            assert_error.exception.error["description"], [
-                "Not a valid string."]
+            assert_error.exception.error["description"], ["Not a valid string."]
         )
 
     def test_create_with_invalid_cases_for_is_active_prop(self):
         with self.assertRaises(EntityValidationException) as assert_error:
             Category(name="Movie", is_active=5)
         self.assertEqual(
-            assert_error.exception.error["is_active"], [
-                "Must be a valid boolean."]
+            assert_error.exception.error["is_active"], ["Must be a valid boolean."]
         )
 
     def test_create_with_valid_cases(self):
@@ -90,8 +88,7 @@ class TestCategoryIntegration(unittest.TestCase):
         with self.assertRaises(EntityValidationException) as assert_error:
             category.update(name="Movie", description=5)
         self.assertEqual(
-            assert_error.exception.error["description"], [
-                "Not a valid string."]
+            assert_error.exception.error["description"], ["Not a valid string."]
         )
 
     def test_update_with_valid_cases(self):
