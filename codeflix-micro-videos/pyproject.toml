@@ -23,12 +23,25 @@ dev = [
     "black>=22.6.0",
 ]
 [tool.pdm.scripts]
+# black
 black = "black ./src"
+
+# pep8
 pep8 = "autopep8 --in-place --recursive ./src"
+
+# pylint
 pylint = "pylint ./src"
+
+# pytest
 pytest = "pytest --ignore __pypackages__"
 pytest_cov = "pytest --ignore __pypackages__ --cov ./src --cov-fail-under 80"
 pytest_cov_html = "pytest --ignore __pypackages__ --cov ./src --cov-report html:./__coverage"
+
+# django
+manage = "python ./src/django_app/manage.py"
+migrate = "pdm run manage migrate"
+makemigrations = "pdm run manage makemigrations"
+runserver = "pdm run manage runserver 0.0.0.0:8000"
 
 [build-system]
 requires = ["pdm-pep517>=0.12.0"]
