@@ -3,6 +3,11 @@ from datetime import datetime, timedelta
 from typing import Optional
 import unittest
 from unittest.mock import patch
+from __seedwork.application.dto import (
+    PaginationOutput,
+    PaginationOutputMapper,
+    SearchInput,
+)
 from __seedwork.domain.exceptions import NotFoundException
 from __seedwork.application.use_cases import UseCase
 from category.application.dto import CategoryOutput, CategoryOutputMapper
@@ -14,6 +19,7 @@ from category.application.use_cases import (
     UpdateCategoryUseCase,
 )
 from category.domain.entities import Category
+from category.domain.repositories import CategoryRepository
 from category.infra.repositories import CategoryInMemoryRepository
 
 
@@ -172,20 +178,57 @@ class TestListCategoryUseCaseUnit(unittest.TestCase):
     def test_if_instance_an_use_case(self):
         self.assertIsInstance(self.use_case, UseCase)
 
+    def test_input(self):
+        self.assertTrue(issubclass(self.use_case.Input, SearchInput))
+
+    def test_output(self):
+        self.assertTrue(issubclass(self.use_case.Output, PaginationOutput))
+
+    def test__to_output(self):
+        entity = Category(name="Movie")
+        default_props = {
+            "total": 1,
+            "current_page": 1,
+            "per_page": 2,
+            "sort": None,
+            "sort_dir": None,
+            "filter": None,
+        }
+
+        result = CategoryRepository.SearchResult(items=[], **default_props)
+        output = self.use_case.__to_output(result)  # pylint: disable=protected-access
+        self.assertEqual(
+            output,
+            self.use_case.Output(
+                items=[],
+                total=1,
+                current_page=1,
+                per_page=2,
+                last_page=1,
+            ),
+        )
+
+        result = CategoryRepository.SearchResult(items=[entity], **default_props)
+        output = self.use_case.__to_output(result)  # pylint: disable=protected-access
+        items = [CategoryOutputMapper.without_child().to_output(entity)]
+        self.assertEqual(
+            output,
+            PaginationOutputMapper.from_child(self.use_case.Output).to_output(
+                items, result
+            ),
+        )
+
     def test_execute_using_empty_search_params(self):
         self.category_repo.items = [
-            Category(name="teste 1"),
-            Category(
-                name="teste 2", created_at=datetime.now() + timedelta(seconds=200)
-            ),
+            Category(name="test 1"),
+            Category(name="test 2", created_at=datetime.now() + timedelta(seconds=200)),
         ]
         with patch.object(
             self.category_repo, "search", wraps=self.category_repo.search
         ) as spy_search:
             input_param = self.use_case.Input()
-            output = self.use_case.execute(input_param=input_param)
+            output = self.use_case.execute(input_param)
             spy_search.assert_called_once()
-
             self.assertEqual(
                 output,
                 self.use_case.Output(
