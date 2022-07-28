@@ -69,14 +69,12 @@ class ListCategoryUseCase(UseCase):
     category_repo: CategoryRepository
 
     def execute(self, input_param: "Input") -> "Output":
-        search_params = self.category_repo.SearchParams(**asdict(input_param))
-        result = self.category_repo.search(search_params)
+        input_param = self.category_repo.SearchParams(**asdict(input_param))
+        result = self.category_repo.search(input_params=input_param)
         return self.__to_output(result=result)
 
     def __to_output(self, result: CategoryRepository.SearchResult):
-        items = (
-            list(map(CategoryOutputMapper.without_child().to_output, result.items)),
-        )
+        items = list(map(CategoryOutputMapper.without_child().to_output, result.items))
         return PaginationOutputMapper.from_child(
             output_child=ListCategoryUseCase.Output
         ).to_output(items=items, result=result)
@@ -97,8 +95,7 @@ class UpdateCategoryUseCase(UseCase):
 
     def execute(self, input_param: "Input") -> "Output":
         entity = self.category_repo.find_by_id(entity_id=input_param.id)
-        entity.update(name=input_param.name,
-                      description=input_param.description)
+        entity.update(name=input_param.name, description=input_param.description)
 
         if input_param.is_active is True:
             entity.activate()
