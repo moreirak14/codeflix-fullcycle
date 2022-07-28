@@ -8,6 +8,7 @@ authors = [
 dependencies = [
     "djangorestframework>=3.13.1",
     "django>=4.0.6",
+    "django-extensions>=3.2.0",
 ]
 requires-python = ">=3.10"
 license = {text = "MIT"}
@@ -42,6 +43,7 @@ manage = "python ./src/django_app/manage.py"
 migrate = "pdm run manage migrate"
 makemigrations = "pdm run manage makemigrations"
 runserver = "pdm run manage runserver 0.0.0.0:8000"
+show_urls = "pdm run manage show_urls"
 
 [build-system]
 requires = ["pdm-pep517>=0.12.0"]

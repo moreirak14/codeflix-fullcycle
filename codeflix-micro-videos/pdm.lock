@@ -24,7 +24,7 @@ summary = "Atomic file writes."
 [[package]]
 name = "attrs"
 version = "21.4.0"
-requires_python = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+requires_python = ">=3.5"
 summary = "Classes Without Boilerplate"
 
 [[package]]
@@ -96,6 +96,15 @@ dependencies = [
     "asgiref<4,>=3.4.1",
     "sqlparse>=0.2.2",
     "tzdata; sys_platform == \"win32\"",
+]
+
+[[package]]
+name = "django-extensions"
+version = "3.2.0"
+requires_python = ">=3.6"
+summary = "Extensions for Django"
+dependencies = [
+    "Django>=3.2",
 ]
 
 [[package]]
@@ -272,7 +281,7 @@ summary = "Module for decorators, wrappers and monkey patching."
 
 [metadata]
 lock_version = "3.1"
-content_hash = "sha256:c4ed05f2ca77171189bc21aee257ea2be9a98a714ec2b3ff07710cfc5a7c8dc0"
+content_hash = "sha256:06c5a40f456101e579190232a1f14363c79dbf55bdb1a39dea67c1897debd78c"
 
 [metadata.files]
 "asgiref 3.5.2" = [
@@ -377,6 +386,10 @@ content_hash = "sha256:c4ed05f2ca77171189bc21aee257ea2be9a98a714ec2b3ff07710cfc5
 "django 4.0.6" = [
     {file = "Django-4.0.6-py3-none-any.whl", hash = "sha256:ca54ebedfcbc60d191391efbf02ba68fb52165b8bf6ccd6fe71f098cac1fe59e"},
     {file = "Django-4.0.6.tar.gz", hash = "sha256:a67a793ff6827fd373555537dca0da293a63a316fe34cb7f367f898ccca3c3ae"},
+]
+"django-extensions 3.2.0" = [
+    {file = "django_extensions-3.2.0-py3-none-any.whl", hash = "sha256:4c234a7236e9e41c17d9036f6dae7a3a9b212527105b8a0d24b2459b267825f0"},
+    {file = "django-extensions-3.2.0.tar.gz", hash = "sha256:7dc7cd1da50d83b76447a58f5d7e5c8e6cd83f21e9b7e5f97e6b644f4d4e21a6"},
 ]
 "djangorestframework 3.13.1" = [
     {file = "djangorestframework-3.13.1-py3-none-any.whl", hash = "sha256:24c4bf58ed7e85d1fe4ba250ab2da926d263cd57d64b03e8dcef0ac683f8b1aa"},
