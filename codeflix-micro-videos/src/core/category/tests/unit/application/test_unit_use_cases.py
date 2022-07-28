@@ -20,7 +20,7 @@ from core.category.application.use_cases import (
 )
 from core.category.domain.entities import Category
 from core.category.domain.repositories import CategoryRepository
-from core.category.infra.repositories import CategoryInMemoryRepository
+from core.category.infra.in_memory.repositories import CategoryInMemoryRepository
 
 
 class TestCreateCategoryUseCaseUnit(unittest.TestCase):
