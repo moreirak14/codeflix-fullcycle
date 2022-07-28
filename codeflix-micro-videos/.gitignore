@@ -138,3 +138,5 @@ __pypackages__
 
 __coverage
 .coverage
+
+db.sqlite3
