@@ -9,6 +9,7 @@ dependencies = [
     "djangorestframework>=3.13.1",
     "django>=4.0.6",
     "django-extensions>=3.2.0",
+    "dependency-injector>=4.39.1",
 ]
 requires-python = ">=3.10"
 license = {text = "MIT"}
