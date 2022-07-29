@@ -5,7 +5,7 @@ from core.category.application.dto import CategoryOutput
 from rest_framework import status
 from rest_framework.test import APIRequestFactory
 from rest_framework.request import Request
-from core.category.application.use_cases import CreateCategoryUseCase, GetCategoryUseCase, ListCategoryUseCase
+from core.category.application.use_cases import CreateCategoryUseCase, GetCategoryUseCase, ListCategoryUseCase, UpdateCategoryUseCase
 from core.category.infra.django.api import CategoryResource
 
 
@@ -16,6 +16,7 @@ class TestCategoryResourceUnit(unittest.TestCase):
             "list_use_case": None,
             "create_use_case": None,
             "get_use_case": None,
+            "update_use_case": None,
         }
 
     def test_post_method(self):
@@ -155,4 +156,39 @@ class TestCategoryResourceUnit(unittest.TestCase):
             "description": None,
             "is_active": True,
             "created_at": mock_get_use_case.execute.return_value.created_at,
+        })
+
+    def test_put_object_method(self):
+        mock_put_use_case = mock.Mock(UpdateCategoryUseCase)
+        mock_put_use_case.execute.return_value = UpdateCategoryUseCase.Output(
+            id="6eac08e5-5a54-4d2b-afeb-16253d0e75fb",
+            name="Movie",
+            description=None,
+            is_active=True,
+            created_at=datetime.now(),
+        )
+
+        resource = CategoryResource(
+            **{**self.__init_all_none(), "update_use_case": lambda: mock_put_use_case})
+        send_data = {"id": "6eac08e5-5a54-4d2b-afeb-16253d0e75fb", "name": "Movie"}
+        _request = APIRequestFactory().put(path="/", data=send_data)
+        request = Request(_request)
+        request._full_data = send_data  # pylint: disable=protected-access
+        response = resource.put(
+            request=send_data,
+            id="6eac08e5-5a54-4d2b-afeb-16253d0e75fb"
+        )
+
+        mock_put_use_case.execute.assert_called_with(
+            input_param=UpdateCategoryUseCase.Input(
+                id="6eac08e5-5a54-4d2b-afeb-16253d0e75fb",
+                name="Movie",
+            ))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, {
+            "id": "6eac08e5-5a54-4d2b-afeb-16253d0e75fb",
+            "name": "Movie",
+            "description": None,
+            "is_active": True,
+            "created_at": mock_put_use_case.execute.return_value.created_at,
         })
