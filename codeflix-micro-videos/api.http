@@ -1,7 +1,7 @@
 GET http://localhost:8000/categories/
 
 ###
-GET http://localhost:8000/categories/0996bc9a-3a4d-4ff7-8191-e4ea63c4aa3a/
+GET http://localhost:8000/categories/67208c64-6b32-4285-a439-aad9a0d1fff0/
 
 ###
 POST http://localhost:8000/categories/
@@ -12,7 +12,7 @@ Content-Type: application/json
 }
 
 ###
-PUT http://localhost:8000/categories/0996bc9a-3a4d-4ff7-8191-e4ea63c4aa3a/
+PUT http://localhost:8000/categories/521f416a-488e-49fd-a330-743f81c95e91/
 Content-Type: application/json
 
 {
@@ -20,3 +20,6 @@ Content-Type: application/json
     "description": "some description",
     "is_active": false
 }
+
+###
+DELETE http://localhost:8000/categories/d5a9e3b2-3c1e-4282-b0ce-21ad97f5616c/
