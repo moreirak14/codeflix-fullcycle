@@ -1,4 +1,4 @@
-from dataclasses import asdict
+from dataclasses import asdict, dataclass
 from typing import Callable
 from rest_framework.response import Response
 from rest_framework.request import Request
@@ -8,7 +8,7 @@ from core.category.application.use_cases import (
     ListCategoryUseCase,
 )
 
-
+@dataclass(slots=True)
 class CategoryResource(APIView):
 
     create_use_case: Callable[[], CreateCategoryUseCase]
