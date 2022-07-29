@@ -10,6 +10,7 @@ dependencies = [
     "django>=4.0.6",
     "django-extensions>=3.2.0",
     "dependency-injector>=4.39.1",
+    "pytest-django>=4.5.2",
 ]
 requires-python = ">=3.10"
 license = {text = "MIT"}
