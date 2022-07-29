@@ -1,5 +1,7 @@
-###
 GET http://localhost:8000/categories/
+
+###
+GET http://localhost:8000/categories/cf48eb25-6ede-4a28-9428-866b8ba02a8d/
 
 ###
 POST http://localhost:8000/categories/
