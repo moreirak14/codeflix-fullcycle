@@ -7,21 +7,20 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='CategoryModel',
+            name="CategoryModel",
             fields=[
-                ('id', models.UUIDField(primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=255)),
-                ('description', models.TextField(null=True)),
-                ('is_active', models.BooleanField()),
-                ('created_at', models.DateTimeField()),
+                ("id", models.UUIDField(primary_key=True, serialize=False)),
+                ("name", models.CharField(max_length=255)),
+                ("description", models.TextField(null=True)),
+                ("is_active", models.BooleanField()),
+                ("created_at", models.DateTimeField()),
             ],
             options={
-                'db_table': 'categories',
+                "db_table": "categories",
             },
         ),
     ]

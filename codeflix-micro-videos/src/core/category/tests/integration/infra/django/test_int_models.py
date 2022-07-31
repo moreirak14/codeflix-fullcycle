@@ -1,4 +1,4 @@
-#pylint: disable=no-member protected-access
+# pylint: disable=no-member protected-access
 import unittest
 import pytest
 from django.db import models
@@ -8,13 +8,14 @@ from core.category.infra.django.models import CategoryModel
 
 @pytest.mark.django_db()
 class TestCategoryModelInt(unittest.TestCase):
-
     def test_mapping(self):
         table_name = CategoryModel._meta.db_table
         self.assertEqual(table_name, "categories")
 
         fields_name = tuple(field.name for field in CategoryModel._meta.fields)
-        self.assertEqual(fields_name, ("id", "name", "description", "is_active", "created_at"))
+        self.assertEqual(
+            fields_name, ("id", "name", "description", "is_active", "created_at")
+        )
 
         id_field: models.UUIDField = CategoryModel.id.field
         self.assertIsInstance(id_field, models.UUIDField)
@@ -49,14 +50,13 @@ class TestCategoryModelInt(unittest.TestCase):
         self.assertFalse(created_at_field.null)
         self.assertTrue(created_at_field.editable)
 
-
     def test_create(self):
         arrange = {
             "id": "6eac08e5-5a54-4d2b-afeb-16253d0e75fb",
             "name": "Movie",
             "description": None,
             "is_active": True,
-            "created_at": timezone.now()
+            "created_at": timezone.now(),
         }
         category = CategoryModel.objects.create(**arrange)
 
